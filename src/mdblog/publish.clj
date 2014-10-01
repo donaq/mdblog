@@ -7,3 +7,7 @@
 ; setting postdir
 (defn set-postdir [pd]
   (def postdir pd))
+
+(defn -main
+  [& args]
+  (println "hello post"))
