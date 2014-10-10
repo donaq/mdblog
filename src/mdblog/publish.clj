@@ -1,12 +1,6 @@
-(ns mdblog.posts
+; publishes a post to the specified site directory
+(ns mdblog.publish
   (:gen-class))
-
-; Directory to be used for storing posts
-(def postdir)
-
-; setting postdir
-(defn set-postdir [pd]
-  (def postdir pd))
 
 (defn -main
   [& args]

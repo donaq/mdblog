@@ -1,9 +1,11 @@
-(ns mdblog.core
+; creates a site directory.
+(ns mdblog.create
   (:gen-class)
   (:require [clojure.data.json :as json]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [common.utils :as ccu]))
 
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (println "hello core"))
+  (ccu/create (first args)))
