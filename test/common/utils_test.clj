@@ -10,5 +10,4 @@
       (create tmp)
       (is (fs/directory? tmp))
       (is (fs/directory? (str tmp "/public")))
-      ;(fs/delete-dir tmp)
-      )))
+      (fs/delete-dir tmp))))
