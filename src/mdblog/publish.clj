@@ -1,6 +1,7 @@
 ; publishes a post to the specified site directory
 (ns mdblog.publish
-  (:gen-class))
+  (:gen-class)
+  (:require [common.utils :as utils]))
 
 (defn -main
   [& args]
