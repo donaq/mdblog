@@ -6,4 +6,4 @@
 
 (deftest publish-test
   (testing "file written and public/posts/index.json updated"
-    (apply -main ["tmp" "filename" "title"])))
+    (apply publish ["tmp" "file.md" "some title"])))
