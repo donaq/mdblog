@@ -42,9 +42,9 @@
   "Determine if protocol is jar"
   [dir resourcename]
   ; file
-  (if (not (= "jar" (-> resourcename io/resource .getProtocol)))
-    (copy-public-file dir resourcename)
-    (copy-public-jar dir resourcename)))
+  (if (= "jar" (-> resourcename io/resource .getProtocol))
+    (copy-public-jar dir resourcename)
+    (copy-public-file dir resourcename)))
 
 (defn create
   "Does the actual creation. Takes a directory name and creates a site directory, copying all the static files into it if it does not exist."
