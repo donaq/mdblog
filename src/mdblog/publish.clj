@@ -3,7 +3,6 @@
   (:gen-class)
   (:require [common.utils :as utils]
             [clojure.data.json :as json]
-            [clojure.string :as clstr]
             [me.raynes.fs :as fs]))
 
 (defn ensure-exists
@@ -13,16 +12,13 @@
     true
     (utils/create site)))
 
-(defn title-to-name
-  "Takes a title and converts all letters to lower case and all spaces to -. All other characters are removed."
-  [title]
-  (cljstr/lower-case title))
 
 (defn write-post
   "Actual publish to site"
   [site fname title created & args]
-  (let [dat (-> (str site "/public/posts/index.json") slurp json/read-str)]
-    (println dat)))
+  (let [dat (-> (str site "/public/posts/index.json") slurp json/read-str)
+        dstname (utils/title-to-name title)]
+    true))
 
 (defn publish
   [& args]

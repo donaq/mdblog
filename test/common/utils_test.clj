@@ -17,3 +17,9 @@
       (is (fs/directory? (str tmp "/public/posts")))
       (is (fs/file? (str tmp "/public/posts/index.json")))
       (fs/delete-dir tmp))))
+
+
+(deftest title-to-name-test
+  (testing "test title to name function"
+    (is (= "capstest" (title-to-name "CapsTest")))
+    (is (= "punc-test" (title-to-name "Punc Test")))))

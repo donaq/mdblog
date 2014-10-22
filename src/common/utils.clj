@@ -2,6 +2,7 @@
   (:gen-class)
   (:require [clojure.data.json :as json]
             [clojure.java.io :as io]
+            [clojure.string :as clstr]
             [me.raynes.fs :as fs])
   (:import (java.util.zip ZipFile ZipEntry)))
 
@@ -54,3 +55,10 @@
     (do
       (fs/mkdir dir)
       (copy-public dir "public"))))
+
+(defn title-to-name
+  "Takes a title and converts all letters to lower case and all spaces to -. All other characters are removed."
+  [title]
+  (-> title clstr/lower-case
+      (clstr/replace " " "-")
+      ))
