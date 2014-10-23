@@ -20,6 +20,7 @@
 
 
 (deftest title-to-name-test
-  (testing "test title to name function"
+  (testing "test title-to-name function"
     (is (= "capstest" (title-to-name "CapsTest")))
-    (is (= "punc-test" (title-to-name "Punc Test")))))
+    (is (= "punc-test" (title-to-name "Punc Test")))
+    (is (= "allowed-chars" (title-to-name ";'\"]$%#@a^^&llo&WE#d Ch!@#$)(ars.")))))

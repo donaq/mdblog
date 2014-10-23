@@ -20,7 +20,7 @@
 
 (deftest publish-test
   (testing "file written and public/posts/index.json updated"
-    (publish tmp fmd "some title")
+    (publish tmp fmd "some title" "subdir1" "subdir2")
     (let [dat (-> (str tmp "/public/posts/index.json") slurp json/read-str)]
       (is (= 1 (count (dat "posts")))))))
 

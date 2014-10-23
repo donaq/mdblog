@@ -56,9 +56,22 @@
       (fs/mkdir dir)
       (copy-public dir "public"))))
 
+(defn only-allowed-chars
+  "Removes any character not in a-z0-9-."
+  [src]
+  (clstr/join "" (for [c src
+                       :let [i (int c)]
+                       ; alphabets
+                       :when (or (and (>= i 97) (<= i 122))
+                                 ; hyphen
+                                 (= i 45)
+                                 ; numbers
+                                 (and (>= i 48) (<= i 57)))]
+                   c)))
+
 (defn title-to-name
-  "Takes a title and converts all letters to lower case and all spaces to -. All other characters are removed."
+  "Takes a title and returns a file name"
   [title]
   (-> title clstr/lower-case
       (clstr/replace " " "-")
-      ))
+      (only-allowed-chars)))
