@@ -8,32 +8,34 @@
 
 (def tmp "tmp")
 (def fmd "file.md")
+(def md-contents "Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn")
 
 (defn create-tmp
   "fixture to create site in tmp"
   [f]
   (utils/create tmp)
-  (fs/create (io/file fmd))
+  (spit fmd md-contents)
   (f)
   (fs/delete-dir tmp)
   (fs/delete fmd))
 
-(deftest publish-test-file
-  (testing "md file copied to target directory and deleted"
-    (publish tmp fmd "some title" "subdir1" "subdir2")
-    ))
-
-(deftest publish-test-meta
-  (testing "public/posts/index.json updated"
+(deftest publish-test
+  (testing "public/posts/index.json updated and md file copied to target directory and deleted"
     (is (== 0 (count ((-> (str tmp "/public/posts/index.json") slurp json/read-str) "posts"))))
     (publish tmp fmd "some title" "subdir1" "subdir2")
     (let [dat (-> (str tmp "/public/posts/index.json") slurp json/read-str)
           post (-> "posts" dat (nth 0))
           testdat {"title" "some title",
                    "location" "/posts/subdir1/subdir2/some-title.md"}]
+      ; check contents of metadata
       (is (== 1 (count (dat "posts"))))
       (is (= (dissoc post "created" "modified") testdat))
-      (is (and (contains? post "created") (contains? post "modified"))))))
+      (is (and (contains? post "created") (contains? post "modified")))
+      ; check copied file content is identical to original file content
+      (is (= (slurp (str tmp "/public/posts/subdir1/subdir2/some-title.md")) md-contents))
+      (println (slurp (str tmp "/public/posts/subdir1/subdir2/some-title.md")))
+      ; check original markdown file deleted
+      (is (not (fs/exists? fmd))))))
 
 (deftest publish-to-non-existent
   (testing "trying to publish to non-existent site should create that site"

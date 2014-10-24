@@ -28,7 +28,12 @@
                  "created" created,
                  "modified" created,
                  "location" reldstname}]
-    (->> postdat (conj posts) (assoc dat "posts") json/write-str (spit datname))))
+    ; write to index file
+    (->> postdat (conj posts) (assoc dat "posts") json/write-str (spit datname))
+    ; copy markdown file to destination
+    (fs/copy+ fname dstname)
+    ; delete original markdown file
+    (fs/delete fname)))
 
 (defn publish
   [& args]
