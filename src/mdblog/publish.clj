@@ -13,16 +13,22 @@
     true
     (utils/create site)))
 
-
 (defn write-post
   "Actual publish to site"
   [site fname title subdirs created & args]
-  (let [dat (-> (str site "/public/posts/index.json") slurp json/read-str)
-        dstdir (clstr/join "/" (concat [site] ["public/posts"] subdirs))
+  (let [sitepostdir (str site "/public/posts")
+        datname (str sitepostdir "/index.json")
+        dat (-> datname slurp json/read-str)
+        posts (dat "posts")
+        dstdir (clstr/join "/" (concat [sitepostdir] subdirs))
         dstfname (str (utils/title-to-name title) ".md")
         dstname (str dstdir "/" dstfname)
-        reldstname (clstr/join "/" (concat ["" "posts"] subdirs [dstfname]))]
-    (println reldstname)))
+        reldstname (str (clstr/join "/" (concat ["/posts"] subdirs)) "/" dstfname)
+        postdat {"title" title,
+                 "created" created,
+                 "modified" created,
+                 "location" reldstname}]
+    (->> postdat (conj posts) (assoc dat "posts") json/write-str (spit datname))))
 
 (defn publish
   [& args]
