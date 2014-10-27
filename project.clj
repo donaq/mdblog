@@ -9,6 +9,7 @@
   :main ^:skip-aot mdblog.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}}
+  :uberjar-name "mdblog.jar"
   :aliases {"publish"
               ^{:doc "Publishes a markdown file as a post.
 

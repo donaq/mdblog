@@ -1,36 +1,33 @@
 # mdblog
 
-A simple blogging engine written in clojure.
+A simple markdown blogging engine written in clojure.
+
+This just generates a basic site and maintains the metadata. You have all the flexibility in the world to change the site as you see fit. Just edit public/js/site.js to change functionality.
 
 ## Installation
 
-I'm the only one using this, so it's gonna be git
+I'm the only one using this, so it's gonna be git.
+
+Or if you want to use it, you can uberjar it.
 
 ## Usage
 
-FIXME: explanation
+Usage: ```java -jar mdblog.jar [command] [args]```
 
-    $ java -jar mdblog-0.1.0-standalone.jar [args]
+Or put the jar in a runnable shell script. I do not remember how to do this, but it's easily searchable.
 
-## Options
+See project.clj aliases for the list of commands.
 
-FIXME: listing of options this app accepts.
+## Built with
 
-## Examples
+* [clojure](http://clojure.org)
+* [marked](https://github.com/chjj/marked)
+* [jquery](http://jquery.com/)
 
-...
+## NOTE
 
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
+This is very much a work in progress and a learning exercise, so don't look for me if it makes your computer explode.
 
 ## License
 
-Copyright © 2014 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the I Do Not Give a Flying Fuck License, wherein I do not give a flying fuck what you do with it, as long as you do not ask me for features or upgrades. 
