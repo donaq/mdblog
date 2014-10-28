@@ -21,12 +21,13 @@ See project.clj aliases for the list of commands.
 ## Built with
 
 * [clojure](http://clojure.org)
-* [marked](https://github.com/chjj/marked)
-* [jquery](http://jquery.com/)
+* [marked](https://github.com/chjj/marked/commit/3e02a69921b9b4009d0b17aa1fe0ae2546f96de2) 
+* [jquery](http://jquery.com/) (2.1.1)
+* [bootstrap](http://getbootstrap.com) (3.2.0)
 
 ## NOTE
 
-This is very much a work in progress and a learning exercise, so don't look for me if it makes your computer explode.
+This is very much a work in progress and a learning exercise besides, so don't come looking for me if it makes your computer explode.
 
 ## License
 
