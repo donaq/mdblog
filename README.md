@@ -25,10 +25,12 @@ See project.clj aliases for the list of commands.
 * [jquery](http://jquery.com/) (2.1.1)
 * [bootstrap](http://getbootstrap.com) (3.2.0)
 
-## NOTE
+## Notes
 
-This is very much a work in progress and a learning exercise besides, so don't come looking for me if it makes your computer explode.
+I started this project because I live in the command-line and my favourite working environment is vim+screen. Documentation is sparse, but then if you find this useful, you probably have a similar working environment and should be able to figure it out easily.
+
+This is very much a work in progress and a learning exercise besides, so don't come looking for me if it makes your computer explode. Feel free to suggest improvements, but I would only implement them if I think I can personally use them.
 
 ## License
 
-Distributed under the I Do Not Give a Flying Fuck License, wherein I do not give a flying fuck what you do with it, as long as you do not ask me for features or upgrades. 
+Distributed under the I Do Not Give a Flying Fuck License, wherein I do not give a flying fuck what you do with it.
