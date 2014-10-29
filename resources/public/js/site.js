@@ -1,6 +1,22 @@
 var now = new Date(), // rarely used
+    navs = ["contents", "about"],
     postdat = null;
 
+/* site functions */
+
+// creates nav hook functions
+function navhook(listelem){
+    return function(){
+        $(".navli").removeClass("active");
+        $(listelem).addClass("active");
+    };
+}
+
+/* end site functions */
+
+/* home page functions */
+
+// refresh post data
 function refresh_dat(){
     var nocb = function(data, txtstatus){ postdat = data; },
         cb = null;
@@ -15,16 +31,29 @@ function refresh_dat(){
     $.getJSON("/posts/index.json", cb);
 }
 
+/* end home page functions */
+
+/* post page functions */
+
 function refresh_posts(){
     var posts = postdat["posts"],
         plen = posts.length,
         page = arguments.length==1?arguments[0]:0;
-
 }
 
-/**
- * When ready, get the posts.
- */
+/* end post page functions */
+
 $(document).ready(function(){
+    // nav hooks
+    for(var i=0;i<navs.length;i++){
+        var n = navs[i];
+        $("#"+n+"topnav").click(navhook("#"+n+"li"));
+    }
+
+    $(".homelink").click(function(){
+        $(".navli").removeClass("active");
+    });
+
+    // get posts
     refresh_dat(refresh_posts);
 });
