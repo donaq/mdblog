@@ -1,8 +1,8 @@
 # mdblog
 
-A simple markdown blogging engine written in clojure.
+A simple markdown static CMS written in clojure.
 
-This just generates a basic site and maintains the metadata. You have all the flexibility in the world to change the site as you see fit. Just edit public/js/site.js to change functionality.
+This just generates a static site and maintains the metadata. You have all the flexibility in the world to change the site as you see fit. Just edit public/js/site.js to change functionality.
 
 ## Installation
 
@@ -16,7 +16,19 @@ Usage: ```java -jar mdblog.jar [command] [args]```
 
 Or put the jar in a runnable shell script. I do not remember how to do this, but it's easily searchable.
 
-See project.clj aliases for the list of commands.
+## Commands
+
+### create
+
+Usage: ```create <site name>```
+
+A skeleton directory structure for a website will be created in a directory named after the site name. You can edit the css and index.html however you wish, but the javascript expects the "contentdiv", "homediv", "contentdiv" and "aboutdiv" divs to be there. Just serve the "public" subdirectory in the site directory with a webserver of your choice.
+
+### publish
+
+Usage: ```publish <site directory> <filename> <Title> <subdir1> <subdir2> ...```
+
+Publishes the markdown file denoted by "filename" to the site. The subdir arguments are optional. I have no idea where I am going with this.
 
 ## Built with
 
