@@ -12,6 +12,12 @@ function navhook(listelem){
     };
 }
 
+// dispatcher function
+function dispatcher(){
+    var currhash = location.hash.slice(1);
+    console.log(currhash);
+}
+
 /* end site functions */
 
 /* home page functions */
@@ -56,4 +62,8 @@ $(document).ready(function(){
 
     // get posts
     refresh_dat(refresh_posts);
+
+    dispatcher();
+
+    $(window).on('hashchange', dispatcher);
 });
