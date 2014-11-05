@@ -18,6 +18,20 @@ function dispatcher(){
     console.log(currhash);
 }
 
+// simple check for change in hash.
+function hashchange(){
+    var self = this;
+
+    self.currhash = location.hash;
+    
+    self.pollfunction = function(){
+        if(self.currhash==location.hash) return;
+        console.log("changed from "+self.currhash+" to "+location.hash);
+        self.currhash = location.hash;
+        dispatcher();
+    }
+}
+
 /* end site functions */
 
 /* home page functions */
@@ -63,7 +77,13 @@ $(document).ready(function(){
     // get posts
     refresh_dat(refresh_posts);
 
+    // call dispatcher on load so that we serve the correct page based on the hash
     dispatcher();
 
-    $(window).on('hashchange', dispatcher);
+    // handle detection of change in hash
+    if("onhashchange" in window) $(window).on('hashchange', dispatcher);
+    else{
+        var hashchanger = new hashchange();
+        setInterval(hashchanger.pollfunction, 50);
+    }
 });
