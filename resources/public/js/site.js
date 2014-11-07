@@ -14,7 +14,12 @@ function navhook(listelem){
 
 // dispatcher function
 function dispatcher(){
-    var currhash = location.hash.slice(1);
+    var currhash = location.hash.slice(1),
+        splitted = currhash.replace(/^\/+|\/+$/gm,'').split("/"),
+        page = splitted(0),
+        controllers = {"contents": contents};
+
+
     console.log(currhash);
 }
 
@@ -32,11 +37,7 @@ function hashchange(){
     }
 }
 
-/* end site functions */
-
-/* home page functions */
-
-// refresh post data
+// refresh posts data. to be used as callback for refresh_posts
 function refresh_dat(){
     var nocb = function(data, txtstatus){ postdat = data; },
         cb = null;
@@ -50,6 +51,19 @@ function refresh_dat(){
 
     $.getJSON("/posts/index.json", cb);
 }
+
+/* end site functions */
+
+/* contents page functions */
+
+//TODO: currently, we have only sort_by param, which does not work. Eventually we want to be able to sort by alphabet and date. We should also have pagination and display subdirectories nicely.
+function contents(){
+}
+
+/* end contents page functions */
+
+/* home page functions */
+
 
 /* end home page functions */
 
@@ -74,11 +88,8 @@ $(document).ready(function(){
         $(".navli").removeClass("active");
     });
 
-    // get posts
-    refresh_dat(refresh_posts);
-
-    // call dispatcher on load so that we serve the correct page based on the hash
-    dispatcher();
+    // get posts, call dispatcher on load so that we serve the correct page based on the hash
+    refresh_dat(dispatcher);
 
     // handle detection of change in hash
     if("onhashchange" in window) $(window).on('hashchange', dispatcher);
