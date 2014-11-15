@@ -23,7 +23,8 @@ function dispatcher(){
         page = splitted[0],
         controllers = {"contents": contents,
             "": home,
-            "about": about
+            "about": about,
+            "title": title
         };
 
     console.log(page);
@@ -100,6 +101,9 @@ function about(){
 }
 
 /* post page functions */
+
+function title(){
+}
 
 function refresh_posts(){
     var posts = postdat["posts"],
