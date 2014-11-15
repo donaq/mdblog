@@ -1,26 +1,38 @@
 var now = new Date(), // rarely used
-    navs = ["contents", "about"],
+    activetabmap = { "contents": "contentsli",
+        "about": "aboutli",
+        "title": "contentsli"
+    },
     postdat = null;
 
 /* site functions */
 
-// creates nav hook functions
-function navhook(listelem){
-    return function(){
-        $(".navli").removeClass("active");
-        $(listelem).addClass("active");
-    };
+// highlights active tab based on page
+function activate_tab(page){
+    $(".navli").removeClass("active");
+    if(!(page in activetabmap))
+        return;
+    var tabid = "#" + activetabmap[page];
+    $(tabid).addClass("active");
 }
 
 // dispatcher function
 function dispatcher(){
     var currhash = location.hash.slice(1),
         splitted = currhash.replace(/^\/+|\/+$/gm,'').split("/"),
-        page = splitted(0),
-        controllers = {"contents": contents};
+        page = splitted[0],
+        controllers = {"contents": contents,
+            "": home,
+            "about": about
+        };
 
+    console.log(page);
 
-    console.log(currhash);
+    // handle highlighting of active tab
+    activate_tab(page);
+
+    $(".hideonchange").hide();
+    controllers[page]();
 }
 
 // simple check for change in hash.
@@ -56,16 +68,36 @@ function refresh_dat(){
 
 /* contents page functions */
 
-//TODO: currently, we have only sort_by param, which does not work. Eventually we want to be able to sort by alphabet and date. We should also have pagination and display subdirectories nicely.
+//TODO: currently, we have only sort_by param, which does not work. Eventually we want to be able to sort by alphabet or date. We should also have pagination and display subdirectories nicely.
 function contents(){
+    // clear the contentdiv first
+    $(".contentsitem").remove();
+    if(postdat.posts.length==0){
+        $("#contentsdiv").append('<p class="contentsitem">No posts yet. The site owner should probably do something about that.</p>');
+
+    }else{
+        for(var i=0;i<postdat.posts.length;i++){
+            var htmlstr = '<p class="contentsitem"><a href="#' 
+        }
+    }
+    $("#contentsdiv").show();
 }
 
 /* end contents page functions */
 
 /* home page functions */
 
+function home(){
+    $("#homediv").show();
+}
+
 
 /* end home page functions */
+
+/* about page functions */
+
+function about(){
+}
 
 /* post page functions */
 
@@ -78,16 +110,6 @@ function refresh_posts(){
 /* end post page functions */
 
 $(document).ready(function(){
-    // nav hooks
-    for(var i=0;i<navs.length;i++){
-        var n = navs[i];
-        $("#"+n+"topnav").click(navhook("#"+n+"li"));
-    }
-
-    $(".homelink").click(function(){
-        $(".navli").removeClass("active");
-    });
-
     // get posts, call dispatcher on load so that we serve the correct page based on the hash
     refresh_dat(dispatcher);
 
