@@ -19,12 +19,13 @@ function activate_tab(page){
 // dispatcher function
 function dispatcher(){
     var currhash = location.hash.slice(1),
-        splitted = currhash.replace(/^\/+|\/+$/gm,'').split("/"),
+        stripped = currhash.replace(/^\/+|\/+$/gm,''),
+        splitted = stripped.split("/"),
         page = splitted[0],
         controllers = {"contents": contents,
             "": home,
             "about": about,
-            "title": title
+            "posts": posts
         };
 
     console.log(page);
@@ -33,7 +34,7 @@ function dispatcher(){
     activate_tab(page);
 
     $(".hideonchange").hide();
-    controllers[page]();
+    controllers[page](stripped);
 }
 
 // simple check for change in hash.
@@ -78,7 +79,9 @@ function contents(){
 
     }else{
         for(var i=0;i<postdat.posts.length;i++){
-            var htmlstr = '<p class="contentsitem"><a href="#' 
+            var post = postdat.posts[i];
+            var htmlstr = '<p class="contentsitem"><a href="#' + post.location + '">' + post.title + '</a>';
+            $("#contentsdiv").append(htmlstr);
         }
     }
     $("#contentsdiv").show();
@@ -102,7 +105,11 @@ function about(){
 
 /* post page functions */
 
-function title(){
+function posts(loc){
+    $.get("/"+loc, function(dat){
+        $("#postsdiv").html(marked(dat)).show();
+        $("html, body").animate({scrollTop: $("#postsdiv").offset().top}, 500);
+    }, "text");
 }
 
 function refresh_posts(){
