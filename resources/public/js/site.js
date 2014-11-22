@@ -28,8 +28,6 @@ function dispatcher(){
             "posts": posts
         };
 
-    console.log(page);
-
     // handle highlighting of active tab
     activate_tab(page);
 
@@ -51,9 +49,24 @@ function hashchange(){
     }
 }
 
-// refresh posts data. to be used as callback for refresh_posts
+function preproc_posts(){
+    // preprocess posts so that they can be accessed by their location
+    var posts = postdat["posts"];
+
+    postdat.by_location = {};
+    // index by location
+    for(var p in posts){
+        var post = posts[p];
+        postdat.by_location[post.location] = post;
+    }
+}
+
+// refresh posts data.
 function refresh_dat(){
-    var nocb = function(data, txtstatus){ postdat = data; },
+    var nocb = function(data, txtstatus){
+        postdat = data;
+        preproc_posts(postdat.posts);
+    },
         cb = null;
     if(arguments.length>0){
         var argcb = arguments[0]
@@ -106,16 +119,15 @@ function about(){
 /* post page functions */
 
 function posts(loc){
-    $.get("/"+loc, function(dat){
-        $("#postsdiv").html(marked(dat)).show();
+    var lockey = "/" + loc;
+    $.get(lockey, function(dat){
+        // messy hack to put the title in
+        var md = "# " + postdat.by_location[lockey].title + "\n\n" + dat;
+        // render the markdown and inject into the div
+        $("#postsdiv").html(marked(md)).show();
+        // scroll to the top of the div
         $("html, body").animate({scrollTop: $("#postsdiv").offset().top}, 500);
     }, "text");
-}
-
-function refresh_posts(){
-    var posts = postdat["posts"],
-        plen = posts.length,
-        page = arguments.length==1?arguments[0]:0;
 }
 
 /* end post page functions */
