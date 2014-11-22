@@ -114,6 +114,7 @@ function home(){
 /* about page functions */
 
 function about(){
+    posts("/posts/about.md");
 }
 
 /* post page functions */
@@ -127,7 +128,11 @@ function posts(loc){
         $("#postsdiv").html(marked(md)).show();
         // scroll to the top of the div
         $("html, body").animate({scrollTop: $("#postsdiv").offset().top}, 500);
-    }, "text");
+    }, "text").fail(function(){
+        var md = "## Error.\n\nPage not found";
+        $("#postsdiv").html(marked(md)).show();
+        $("html, body").animate({scrollTop: $("#postsdiv").offset().top}, 500);
+    });
 }
 
 /* end post page functions */
