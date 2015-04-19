@@ -39,7 +39,7 @@ Publishes the markdown file denoted by "filename" to the site. The subdir argume
 
 ## Notes
 
-I started this project because I live in the command-line and my favourite working environment is vim+screen. Documentation is sparse, but then if you find this useful, you probably have a similar working environment and should be able to figure it out easily.
+I started this project because I live in the command-line and my favourite working environment is vim+screen. Also, I wanted to try hosting a personal site using a raspberry pi, so it needs to be a very stripped down static site. Documentation is sparse, but then if you find this useful, you probably have a similar working environment and should be able to figure it out easily.
 
 This is very much a work in progress and a learning exercise besides, so don't come looking for me if it makes your computer explode. Feel free to suggest improvements, but I would only implement them if I think I can personally use them.
 
