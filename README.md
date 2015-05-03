@@ -22,7 +22,7 @@ Or put the jar in a runnable shell script. I do not remember how to do this, but
 
 Usage: ```create <site name>```
 
-A skeleton directory structure for a website will be created in a directory named after the site name. You can edit the css and index.html however you wish, but the javascript expects the "homediv", "contentsdiv" and "maindiv" divs to be there. Just serve the "public" subdirectory in the site directory with a webserver of your choice.
+A skeleton directory structure for a website will be created in a directory named after the site name. You can edit the css and index.html however you wish, but the javascript expects the "postsdiv", "contentsdiv" and "maindiv" divs to be there. Just serve the "public" subdirectory in the site directory with a webserver of your choice.
 
 ### publish
 
