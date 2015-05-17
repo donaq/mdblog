@@ -22,25 +22,24 @@
 (deftest publish-test
   (testing "public/posts/index.json updated and md file copied to target directory and deleted"
     (is (== 0 (count ((-> (str tmp "/public/posts/index.json") slurp json/read-str) "posts"))))
-    (publish tmp fmd "some title" "subdir1" "subdir2")
+    (publish tmp fmd "some title" "section" "subsection")
     (let [dat (-> (str tmp "/public/posts/index.json") slurp json/read-str)
-          post (-> "posts" dat (nth 0))
+          post (nth (get-in dat ["posts" "section" "subsection"]) 0)
           testdat {"title" "some title",
-                   "location" "/posts/subdir1/subdir2/some-title.md"}]
+                   "location" "/posts/some-title.md"}]
       ; check contents of metadata
-      (is (== 1 (count (dat "posts"))))
       (is (= (dissoc post "created" "modified") testdat))
       (is (and (contains? post "created") (contains? post "modified")))
       ; check copied file content is identical to original file content
-      (is (= (slurp (str tmp "/public/posts/subdir1/subdir2/some-title.md")) md-contents))
-      (println (slurp (str tmp "/public/posts/subdir1/subdir2/some-title.md")))
+      (is (= (slurp (str tmp "/public/posts/some-title.md")) md-contents))
+      (println (slurp (str tmp "/public/posts/some-title.md")))
       ; check original markdown file deleted
       (is (not (fs/exists? fmd))))))
 
 (deftest publish-to-non-existent
   (testing "trying to publish to non-existent site should create that site"
     (fs/delete-dir tmp)
-    (publish tmp fmd "some title")
+    (publish tmp fmd "some title" "section")
     (is (fs/directory? tmp))))
 
 (use-fixtures :each create-tmp)
