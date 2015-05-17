@@ -26,9 +26,9 @@ A skeleton directory structure for a website will be created in a directory name
 
 ### publish
 
-Usage: ```publish <site directory> <filename> <Title> <subdir1> <subdir2> ...```
+Usage: ```publish <site directory> <filename> <Title> <section> <subsection> <subsubsection> ...```
 
-Publishes the markdown file denoted by "filename" to the site. The subdir arguments are optional. I have no idea where I am going with this.
+Publishes the markdown file denoted by "filename" to the site. The (sub)*section arguments are optional. I have no idea where I am going with this.
 
 ## Built with
 
