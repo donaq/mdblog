@@ -85,17 +85,12 @@ function refresh_dat(){
 function contents(){
     // clear the contentdiv first
     $(".contentsitem").remove();
-    if(postdat.posts.length==0){
+    var posts = postdat['posts'],
+        pkeys = Object.keys(posts);
+    if(pkeys.length==0){
         $("#contentsdiv").append('<p class="contentsitem">No posts yet. The site owner should probably do something about that.</p>');
-
-    }else{
-        for(var i=0;i<postdat.posts.length;i++){
-            var post = postdat.posts[i];
-            var htmlstr = '<p class="contentsitem"><a href="#' + post.location + '">' + post.title + '</a>';
-            $("#contentsdiv").append(htmlstr);
-        }
+        return $("#contentsdiv").show();
     }
-    $("#contentsdiv").show();
 }
 
 /* end contents page functions */
