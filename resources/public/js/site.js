@@ -33,6 +33,9 @@ function dispatcher(){
 
     $(".hideonchange").hide();
     controllers[page](stripped, page);
+    // google analytics
+    if(typeof(ga)!="undefined")
+        ga('send', 'pageview', {'page': location.pathname+location.search+location.hash});
 }
 
 // simple check for change in hash.
