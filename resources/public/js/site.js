@@ -56,12 +56,7 @@ function preproc_posts(){
     // preprocess posts so that they can be accessed by their location
     var posts = postdat["posts"];
 
-    postdat.by_location = {};
-    //TODO: modify so that we have a hierarchical object by directories. 
-    for(var p in posts){
-        var post = posts[p];
-        postdat.by_location[post.location] = post;
-    }
+    // User can do desired preprocessing here
 }
 
 // refresh posts data.
