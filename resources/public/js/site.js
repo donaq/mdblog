@@ -25,7 +25,7 @@ function dispatcher(){
         controllers = {"contents": contents,
             "": function(){ homeabout(null, "home") },
             "about": homeabout,
-            "posts": posts
+            "posts": posts_handler
         };
 
     // handle highlighting of active tab
@@ -34,7 +34,7 @@ function dispatcher(){
     $(".hideonchange").hide();
     controllers[page](stripped, page);
     // google analytics
-    if(typeof(ga)!="undefined")
+    if(typeof ga!=="undefined")
         ga('send', 'pageview', {'page': location.pathname+location.search+location.hash});
 }
 
@@ -55,8 +55,6 @@ function hashchange(){
 function preproc_posts(){
     // preprocess posts so that they can be accessed by their location
     var posts = postdat["posts"];
-
-    // User can do desired preprocessing here
 }
 
 // refresh posts data.
@@ -91,6 +89,23 @@ function contents(){
         $("#contentsdiv").append('<p class="contentsitem">No posts yet. The site owner should probably do something about that.</p>');
         return $("#contentsdiv").show();
     }
+
+    var splitted = arguments[0].split("/"),
+        order = splitted.slice(0, 2),
+        sections = splitted.slice(2),
+        selen = sections.length;
+    for(var i=0;i<selen;i++){
+        var k = sections[i];
+        if(!(k in posts)){
+            $("#contentsdiv").append('<p class="contentsitem">/ ' + sections.join(" / ") + ' does not exist!</p>');
+            return $("#contentsdiv").show();
+        }
+        posts = posts[k];
+    }
+
+    //var htmlstr = '<p class="contentsitem"><a href="#' + post.location + '">' + post.title + '</a>';
+    //$("#contentsdiv").append(htmlstr);
+    //$("#contentsdiv").show();
 }
 
 /* end contents page functions */
@@ -115,7 +130,7 @@ function homeabout(stripped, page){
 
 /* post page functions */
 
-function posts(loc){
+function posts_handler(loc){
     var lockey = "/" + loc;
     $.get(lockey, function(dat){
         // render the markdown and inject into the div
