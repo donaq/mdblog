@@ -90,22 +90,41 @@ function contents(){
         return $("#contentsdiv").show();
     }
 
-    var splitted = arguments[0].split("/"),
-        order = splitted.slice(0, 2),
+    var currpage = arguments[0] + '/';
+        splitted = arguments[0].split("/"),
+        page = splitted[0],
+        order = splitted[1],
+        prefix = splitted.slice(0,2).join("/"),
         sections = splitted.slice(2),
         selen = sections.length;
+
+    var breadcrumbs = '<p class="contentsitem">location: / ';
+
     for(var i=0;i<selen;i++){
         var k = sections[i];
         if(!(k in posts)){
             $("#contentsdiv").append('<p class="contentsitem">/ ' + sections.join(" / ") + ' does not exist!</p>');
             return $("#contentsdiv").show();
         }
+        breadcrumbs = breadcrumbs + '<a href="#' + prefix + '/' + k + '">' + k + '</a> / ';
+        prefix = prefix + k + '/';
         posts = posts[k];
     }
+    breadcrumbs = breadcrumbs + "</p>";
+    $("#contentsdiv").append(breadcrumbs);
 
-    //var htmlstr = '<p class="contentsitem"><a href="#' + post.location + '">' + post.title + '</a>';
-    //$("#contentsdiv").append(htmlstr);
-    //$("#contentsdiv").show();
+    // at a section level
+    if(!(posts instanceof Array)){
+        var subsections = Object.keys(posts),
+            sublen = subsections.length;
+        subsections.sort();
+        for(var i=0;i<sublen;i++){
+            var ln = currpage + subsections[i];
+            var htmlstr = '<p class="contentsitem"><a href="#' + ln + '">' + subsections[i] + '</a>';
+            $("#contentsdiv").append(htmlstr);
+        }
+        return $("#contentsdiv").show();
+    }
 }
 
 /* end contents page functions */
