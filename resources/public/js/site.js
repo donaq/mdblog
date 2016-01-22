@@ -1,7 +1,7 @@
 var now = new Date(), // rarely used
     activetabmap = { "contents": "contentsli",
         "about": "aboutli",
-        "title": "contentsli"
+        "posts": "contentsli"
     },
     postdat = null;
 
@@ -85,6 +85,7 @@ function contents(){
     $(".contentsitem").remove();
     var posts = postdat['posts'],
         pkeys = Object.keys(posts);
+    // no contents at all
     if(pkeys.length==0){
         $("#contentsdiv").append('<p class="contentsitem">No posts yet. The site owner should probably do something about that.</p>');
         return $("#contentsdiv").show();
@@ -98,14 +99,16 @@ function contents(){
         sections = splitted.slice(2),
         selen = sections.length;
 
-    var breadcrumbs = '<p class="contentsitem">location: / ';
+    var breadcrumbs = '<p class="contentsitem">location: <a href="#contents/alpha">Top</a> / ';
 
     for(var i=0;i<selen;i++){
-        var k = sections[i];
+        var k = decodeURIComponent(sections[i]);
+        // deal with non-existent section
         if(!(k in posts)){
             $("#contentsdiv").append('<p class="contentsitem">/ ' + sections.join(" / ") + ' does not exist!</p>');
             return $("#contentsdiv").show();
         }
+        // breadcrumbing
         breadcrumbs = breadcrumbs + '<a href="#' + prefix + '/' + k + '">' + k + '</a> / ';
         prefix = prefix + k + '/';
         posts = posts[k];
@@ -113,7 +116,7 @@ function contents(){
     breadcrumbs = breadcrumbs + "</p>";
     $("#contentsdiv").append(breadcrumbs);
 
-    // at a section level
+    // still displaying section level
     if(!(posts instanceof Array)){
         var subsections = Object.keys(posts),
             sublen = subsections.length;
@@ -125,6 +128,15 @@ function contents(){
         }
         return $("#contentsdiv").show();
     }
+    // displaying story level
+    var plen = posts.length;
+    for(var i=0;i<plen;i++){
+        var post = posts[i];
+        var htmlstr = '<p class="contentsitem"><a href="#' + post.location + '">' + post.title + '</a>';
+        $("#contentsdiv").append(htmlstr);
+    }
+
+    return $("#contentsdiv").show();
 }
 
 /* end contents page functions */
@@ -153,7 +165,7 @@ function posts_handler(loc){
     var lockey = "/" + loc;
     $.get(lockey, function(dat){
         // render the markdown and inject into the div
-        $("#postsdiv").html(marked(md)).show();
+        $("#postsdiv").html(marked(dat)).show();
         // scroll to the top of the div
         $("html, body").animate({scrollTop: $("#postsdiv").offset().top}, 500);
     }, "text").fail(function(){
