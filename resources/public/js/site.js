@@ -1,9 +1,11 @@
 var now = new Date(), // rarely used
     activetabmap = { "contents": "contentsli",
-        "about": "aboutli",
-        "posts": "contentsli"
+        "about": "aboutli"
     },
     postdat = null;
+
+// holds the compare functions by path prefix
+var compares = {};
 
 /* site functions */
 
@@ -75,6 +77,39 @@ function refresh_dat(){
     $.getJSON("/posts/index.json", cb);
 }
 
+// handles getting to the correct level
+function to_level(sections, posts, errdiv){
+    var selen = sections.length;
+
+    for(var i=0;i<selen;i++){
+        var k = decodeURIComponent(sections[i]);
+        // deal with non-existent section
+        if(!(k in posts)){
+            $(errdiv).append('<p class="contentsitem">/ ' + sections.join(" / ") + ' does not exist!</p>');
+            return false;
+        }
+        posts = posts[k];
+    }
+    return posts;
+}
+
+// handles breadcrumbs
+function get_breadcrumbs(page, sections, posts){
+    var selen = sections.length,
+        prefix = page,
+        breadcrumbs = '<p class="contentsitem">location: <a href="#contents">Top</a> / ';
+
+    for(var i=0;i<selen;i++){
+        var k = decodeURIComponent(sections[i]);
+        // breadcrumbing
+        breadcrumbs = breadcrumbs + '<a href="#' + prefix + '/' + k + '">' + k + '</a> / ';
+        prefix = prefix + k + '/';
+        posts = posts[k];
+    }
+    breadcrumbs = breadcrumbs + "</p>";
+    return breadcrumbs;
+}
+
 /* end site functions */
 
 /* contents page functions */
@@ -84,59 +119,46 @@ function contents(){
     // clear the contentdiv first
     $(".contentsitem").remove();
     var posts = postdat['posts'],
+        ourdiv = "#contentsdiv",
         pkeys = Object.keys(posts);
     // no contents at all
     if(pkeys.length==0){
-        $("#contentsdiv").append('<p class="contentsitem">No posts yet. The site owner should probably do something about that.</p>');
-        return $("#contentsdiv").show();
+        $(ourdiv).append('<p class="contentsitem">No posts yet. The site owner should probably do something about that.</p>');
+        return $(ourdiv).show();
     }
 
     var currpage = arguments[0] + '/';
         splitted = arguments[0].split("/"),
         page = splitted[0],
-        order = splitted[1],
-        prefix = splitted.slice(0,2).join("/"),
-        sections = splitted.slice(2),
-        selen = sections.length;
+        sections = splitted.slice(1),
+        level = to_level(sections, posts, ourdiv);
 
-    var breadcrumbs = '<p class="contentsitem">location: <a href="#contents/alpha">Top</a> / ';
+    if(!level) return $(ourdiv).show();
 
-    for(var i=0;i<selen;i++){
-        var k = decodeURIComponent(sections[i]);
-        // deal with non-existent section
-        if(!(k in posts)){
-            $("#contentsdiv").append('<p class="contentsitem">/ ' + sections.join(" / ") + ' does not exist!</p>');
-            return $("#contentsdiv").show();
-        }
-        // breadcrumbing
-        breadcrumbs = breadcrumbs + '<a href="#' + prefix + '/' + k + '">' + k + '</a> / ';
-        prefix = prefix + k + '/';
-        posts = posts[k];
-    }
-    breadcrumbs = breadcrumbs + "</p>";
-    $("#contentsdiv").append(breadcrumbs);
+    breadcrumbs = get_breadcrumbs(page, sections, posts);
+    $(ourdiv).append(breadcrumbs);
 
     // still displaying section level
-    if(!(posts instanceof Array)){
-        var subsections = Object.keys(posts),
+    if(!(level instanceof Array)){
+        var subsections = Object.keys(level),
             sublen = subsections.length;
         subsections.sort();
         for(var i=0;i<sublen;i++){
             var ln = currpage + subsections[i];
             var htmlstr = '<p class="contentsitem"><a href="#' + ln + '">' + subsections[i] + '</a>';
-            $("#contentsdiv").append(htmlstr);
+            $(ourdiv).append(htmlstr);
         }
-        return $("#contentsdiv").show();
+        return $(ourdiv).show();
     }
     // displaying story level
-    var plen = posts.length;
+    var plen = level.length;
     for(var i=0;i<plen;i++){
-        var post = posts[i];
+        var post = level[i];
         var htmlstr = '<p class="contentsitem"><a href="#' + post.location + '">' + post.title + '</a>';
-        $("#contentsdiv").append(htmlstr);
+        $(ourdiv).append(htmlstr);
     }
 
-    return $("#contentsdiv").show();
+    return $(ourdiv).show();
 }
 
 /* end contents page functions */
