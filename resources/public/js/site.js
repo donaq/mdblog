@@ -4,8 +4,14 @@ var now = new Date(), // rarely used
     },
     postdat = null;
 
-// holds the compare functions by path prefix
-var compares = {};
+// returns a compare function for use in sorting posts based on the page
+// modify this to get customised sorts based on the hashed url in the contents section
+function get_compare(page){
+    function default_compare(a,b){
+        return a<b?-1:1;
+    }
+    return default_compare;
+}
 
 /* site functions */
 
@@ -138,11 +144,14 @@ function contents(){
     breadcrumbs = get_breadcrumbs(sections, posts);
     $(ourdiv).append(breadcrumbs);
 
+    compare = get_compare(arguments[0]);
+
     // still displaying section level
     if(!(level instanceof Array)){
         var subsections = Object.keys(level),
             sublen = subsections.length;
-        subsections.sort();
+        // always sorted by alphabet
+        subsections.sort(compare);
         for(var i=0;i<sublen;i++){
             var ln = currpage + subsections[i];
             var htmlstr = '<p class="contentsitem"><a href="#' + ln + '">' + subsections[i] + '</a>';
@@ -151,10 +160,12 @@ function contents(){
         return $(ourdiv).show();
     }
     // displaying story level
-    var plen = level.length;
+    var plen = level.length,
+        sortedlevel = level.slice();
+    sortedlevel.sort(compare);
     for(var i=0;i<plen;i++){
         var ln = ["posts"].concat(sections,[i]).join("/"),
-            post = level[i];
+            post = sortedlevel[i];
         var htmlstr = '<p class="contentsitem"><a href="#' + ln + '">' + post.title + '</a>';
         $(ourdiv).append(htmlstr);
     }
