@@ -7,9 +7,7 @@ var now = new Date(), // rarely used
 // returns a compare function for use in sorting posts based on the page
 // modify this to get customised sorts based on the hashed url in the contents section
 function get_compare(page){
-    function default_compare(a,b){
-        return a<b?-1:1;
-    }
+    function default_compare(a,b){ return -1; }; // do nothing
     return default_compare;
 }
 
@@ -27,7 +25,7 @@ function activate_tab(page){
 // dispatcher function
 function dispatcher(){
     var currhash = location.hash.slice(1),
-        stripped = currhash.replace(/^\/+|\/+$/gm,''),
+        stripped = decodeURIComponent(currhash.replace(/^\/+|\/+$/gm,'')),
         splitted = stripped.split("/"),
         page = splitted[0],
         controllers = {"contents": contents,
@@ -88,7 +86,7 @@ function to_level(sections, posts, errdiv){
     var selen = sections.length;
 
     for(var i=0;i<selen;i++){
-        var k = decodeURIComponent(sections[i]);
+        var k = sections[i];
         // deal with non-existent section
         if(!(k in posts)){
             $(errdiv).append('<p class="contentsitem">/ ' + sections.join(" / ") + ' does not exist!</p>');
@@ -106,7 +104,7 @@ function get_breadcrumbs(sections, posts){
         breadcrumbs = '<p class="contentsitem">location: <a href="#contents">Top</a> / ';
 
     for(var i=0;i<selen;i++){
-        var k = decodeURIComponent(sections[i]);
+        var k = sections[i];
         // breadcrumbing
         breadcrumbs = breadcrumbs + '<a href="#' + prefix + '/' + k + '">' + k + '</a> / ';
         prefix = prefix + k + '/';
