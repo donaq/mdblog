@@ -94,9 +94,9 @@ function to_level(sections, posts, errdiv){
 }
 
 // handles breadcrumbs
-function get_breadcrumbs(page, sections, posts){
+function get_breadcrumbs(sections, posts){
     var selen = sections.length,
-        prefix = page,
+        prefix = "contents",
         breadcrumbs = '<p class="contentsitem">location: <a href="#contents">Top</a> / ';
 
     for(var i=0;i<selen;i++){
@@ -127,7 +127,7 @@ function contents(){
         return $(ourdiv).show();
     }
 
-    var currpage = arguments[0] + '/';
+    var currpage = arguments[0] + '/',
         splitted = arguments[0].split("/"),
         page = splitted[0],
         sections = splitted.slice(1),
@@ -135,7 +135,7 @@ function contents(){
 
     if(!level) return $(ourdiv).show();
 
-    breadcrumbs = get_breadcrumbs(page, sections, posts);
+    breadcrumbs = get_breadcrumbs(sections, posts);
     $(ourdiv).append(breadcrumbs);
 
     // still displaying section level
@@ -153,8 +153,9 @@ function contents(){
     // displaying story level
     var plen = level.length;
     for(var i=0;i<plen;i++){
-        var post = level[i];
-        var htmlstr = '<p class="contentsitem"><a href="#' + post.location + '">' + post.title + '</a>';
+        var ln = ["posts"].concat(sections,[i]).join("/"),
+            post = level[i];
+        var htmlstr = '<p class="contentsitem"><a href="#' + ln + '">' + post.title + '</a>';
         $(ourdiv).append(htmlstr);
     }
 
@@ -183,18 +184,37 @@ function homeabout(stripped, page){
 
 /* post page functions */
 
-function posts_handler(loc){
-    var lockey = "/" + loc;
-    $.get(lockey, function(dat){
+function posts_handler(){
+    var posts = postdat['posts'],
+        ourdiv = "#postsdiv",
+        currpage = arguments[0] + '/',
+        splitted = arguments[0].split("/"),
+        splen = splitted.length,
+        sections = splitted.slice(1,splen-1),
+        page = Number.parseInt(splitted[splen-1]),
+        level = to_level(sections, posts, ourdiv);
+
+    if(!level) return $(ourdiv).show();
+
+    function failfunc(){
+        var md = "## Error.\n\nPage not found";
+        $("#postsdiv").html(breadcrumbs + marked(md)).show();
+        $("html, body").animate({scrollTop: $("#postsdiv").offset().top}, 500);
+    };
+
+    breadcrumbs = get_breadcrumbs(sections, posts);
+    try{
+        var post = level[page],
+            ln = post['location'];
+    }catch(err){
+        return failfunc();
+    }
+    $.get(ln, function(dat){
         // render the markdown and inject into the div
-        $("#postsdiv").html(marked(dat)).show();
+        $("#postsdiv").html(breadcrumbs + marked(dat)).show();
         // scroll to the top of the div
         $("html, body").animate({scrollTop: $("#postsdiv").offset().top}, 500);
-    }, "text").fail(function(){
-        var md = "## Error.\n\nPage not found";
-        $("#postsdiv").html(marked(md)).show();
-        $("html, body").animate({scrollTop: $("#postsdiv").offset().top}, 500);
-    });
+    }, "text").fail(failfunc);
 }
 
 /* end post page functions */
