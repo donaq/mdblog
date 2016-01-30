@@ -81,6 +81,15 @@ function refresh_dat(){
     $.getJSON("/posts/index.json", cb);
 }
 
+// returns a map of titles to index in input array
+function title_to_index(level){
+    var retval = {},
+        llen = level.length;
+    for(var i=0;i<llen;i++)
+        retval[level[i]['title']] = i;
+    return retval;
+}
+
 // handles getting to the correct level
 function to_level(sections, posts, errdiv){
     var selen = sections.length;
@@ -142,7 +151,7 @@ function contents(){
     breadcrumbs = get_breadcrumbs(sections, posts);
     $(ourdiv).append(breadcrumbs);
 
-    compare = get_compare(arguments[0]);
+    var compare = get_compare(arguments[0]);
 
     // still displaying section level
     if(!(level instanceof Array)){
@@ -159,11 +168,12 @@ function contents(){
     }
     // displaying story level
     var plen = level.length,
+        t2i = title_to_index(level),
         sortedlevel = level.slice();
     sortedlevel.sort(compare);
     for(var i=0;i<plen;i++){
-        var ln = ["posts"].concat(sections,[i]).join("/"),
-            post = sortedlevel[i];
+        var post = sortedlevel[i],
+            ln = ["posts"].concat(sections,[t2i[post['title']]]).join("/");
         var htmlstr = '<p class="contentsitem"><a href="#' + ln + '">' + post.title + '</a>';
         $(ourdiv).append(htmlstr);
     }
