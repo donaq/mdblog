@@ -116,7 +116,7 @@ function get_breadcrumbs(sections, posts){
         var k = sections[i];
         // breadcrumbing
         breadcrumbs = breadcrumbs + '<a href="#' + prefix + '/' + k + '">' + k + '</a> / ';
-        prefix = prefix + k + '/';
+        prefix = prefix + '/' + k;
         posts = posts[k];
     }
     breadcrumbs = breadcrumbs + "</p>";
